@@ -1,25 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route, NavLink, Navigate } from "react-router-dom";
+
+import "./App.css";
+import { CustomLink } from "./components/CustomLink";
+import logo from "./logo.svg";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="main-layout">
+        <nav>
+          <img src={logo} alt="Logo" />
+
+          <ul>
+            <li>
+              <CustomLink to="/">Home</CustomLink>
+            </li>
+            <li>
+              <CustomLink to="/about">About</CustomLink>
+            </li>
+            <li>
+              <NavLink
+                className={({ isActive }) => (isActive ? "nav-active" : "")}
+                to="/users"
+              >
+                Users
+              </NavLink>
+            </li>
+          </ul>
+        </nav>
+
+        <Routes>
+          <Route path="/about" element={<h1>About Page</h1>} />
+          <Route path="/users" element={<h1>Users Page</h1>} />
+          <Route path="/" element={<h1>Home Page</h1>} />
+
+          <Route path="/*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+    </>
   );
 }
 
