@@ -1,46 +1,43 @@
+import { Suspense } from "react";
 import { Routes, Route, NavLink, Navigate } from "react-router-dom";
-import {
-  LazyPageOne,
-  LazyPageThree,
-  LazyPageTwo,
-} from "../components/lazyload/pages";
-
-import { CustomLink } from "./../components/CustomLink";
+import { routes } from "./routes";
 import logo from "./../logo.svg";
 
 export const Navigation = () => {
   return (
     <>
-      <div className="main-layout">
-        <nav>
-          <img src={logo} alt="Logo" />
+      <Suspense fallback={<span>Loading ...</span>}>
+        <div className="main-layout">
+          <nav>
+            <img src={logo} alt="Logo" />
 
-          <ul>
-            <li>
-              <CustomLink to="/lazy-1">Lazy 1</CustomLink>
-            </li>
-            <li>
-              <CustomLink to="/lazy-2">Lazy 2</CustomLink>
-            </li>
-            <li>
-              <NavLink
-                className={({ isActive }) => (isActive ? "nav-active" : "")}
-                to="/lazy-3"
-              >
-                Lazy 3
-              </NavLink>
-            </li>
-          </ul>
-        </nav>
+            <ul>
+              {routes.map(({ to, name }) => (
+                <li key={to}>
+                  <NavLink
+                    className={({ isActive }) => (isActive ? "nav-active" : "")}
+                    to={to}
+                  >
+                    {name}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-        <Routes>
-          <Route path="lazy-1" element={<LazyPageOne />} />
-          <Route path="lazy-2" element={<LazyPageTwo />} />
-          <Route path="lazy-3" element={<LazyPageThree />} />
+          <Routes>
+            {routes.map((route) => (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={<route.Component />}
+              />
+            ))}
 
-          <Route path="/*" element={<Navigate to="/lazy-1" replace />} />
-        </Routes>
-      </div>
+            <Route path="/*" element={<Navigate to={routes[0].to} replace />} />
+          </Routes>
+        </div>
+      </Suspense>
     </>
   );
 };
